@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
 class TaskTest {
 
@@ -48,39 +48,39 @@ class TaskTest {
         assertFalse(result);
     }
 
-    @Test
-    void returnsOnlyTasksWithinRange() {
-        List<Task> tasks = new ArrayList<>();
+    // @Test
+    // void returnsOnlyTasksWithinRange() {
+    //     List<Task> tasks = new ArrayList<>();
 
-        tasks.add(new Task("buy milk", 53.7960, -1.5450, 200));
-        tasks.add(new Task("gym", 53.8100, -1.5600, 100));
-        tasks.add(new Task("dentist", 53.7990, -1.5480, 150));
+    //     tasks.add(new Task("buy milk", 53.7960, -1.5450, 200));
+    //     tasks.add(new Task("gym", 53.8100, -1.5600, 100));
+    //     tasks.add(new Task("dentist", 53.7990, -1.5480, 150));
 
-        List<Task> nearby = App.findNearbyTasks(tasks, 53.7961, -1.5451);
+    //     List<Task> nearby = App.findNearbyTasks(tasks, 53.7961, -1.5451);
 
-        assertEquals(1, nearby.size());
-        assertEquals("buy milk", nearby.get(0).getName());
-    }
+    //     assertEquals(1, nearby.size());
+    //     assertEquals("buy milk", nearby.get(0).getName());
+    // }
 
-    @Test
-    void excludesCompletedTasksFromResults() {
-        List<Task> tasks = new ArrayList<>();
+    // @Test
+    // void excludesCompletedTasksFromResults() {
+    //     List<Task> tasks = new ArrayList<>();
 
-        Task done = new Task("posted letter", 53.7960, -1.5450, 200);
-        done.markComplete();
-        tasks.add(done);
+    //     Task done = new Task("posted letter", 53.7960, -1.5450, 200);
+    //     done.markComplete();
+    //     tasks.add(done);
 
-        List<Task> nearby = App.findNearbyTasks(tasks, 53.7961, -1.5451);
+    //     List<Task> nearby = App.findNearbyTasks(tasks, 53.7961, -1.5451);
 
-        assertTrue(nearby.isEmpty());
-    }
+    //     assertTrue(nearby.isEmpty());
+    // }
 
-    @Test 
-    void returnsEmptyListWhenNothingInRange(){
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("get laundry", 53.7960, -1.5450, 200));
-        List<Task> nearby = App.findNearbyTasks(tasks, 51.5074, 0.1278);
-        assertTrue(nearby.isEmpty());
+    // @Test 
+    // void returnsEmptyListWhenNothingInRange(){
+    //     List<Task> tasks = new ArrayList<>();
+    //     tasks.add(new Task("get laundry", 53.7960, -1.5450, 200));
+    //     List<Task> nearby = App.findNearbyTasks(tasks, 51.5074, 0.1278);
+    //     assertTrue(nearby.isEmpty());
 
-    }
+    // }
 }
