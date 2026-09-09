@@ -3,6 +3,8 @@ package com.caltal;
 public class Task {
 
     private String name;
+    // private double userLatitude;
+    // private double userLongitude;
     private double latitude;
     private double longitude;
     private int radius;
@@ -14,6 +16,33 @@ public class Task {
         setLongitude(longitude);
         setRadius(radius);
         this.isComplete = false;
+
+    }
+
+    public boolean isWithinRange(double userLatitude, double userLongitude) {
+        double distance = distanceTo(userLatitude, userLongitude);
+        return distance <= radius;
+    }
+
+    private static final double EARTH_RADIUS_METRES = 6_371_000.0;
+
+    private double distanceTo(double userLatitude, double userLongitude) {
+        double taskLatitudeRadians = Math.toRadians(this.latitude);
+        double userLatitudeRadians = Math.toRadians(userLatitude);
+
+        double latitudeDifference = Math.toRadians(userLatitude - this.latitude);
+        double longitudeDifference = Math.toRadians(userLongitude - this.longitude);
+
+        double halfLatitudeSine = Math.sin(latitudeDifference / 2);
+        double halfLongitudeSine = Math.sin(longitudeDifference / 2);
+
+        double a = halfLatitudeSine * halfLatitudeSine
+                + Math.cos(taskLatitudeRadians) * Math.cos(userLatitudeRadians)
+                        * halfLongitudeSine * halfLongitudeSine;
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_METRES * c;
     }
 
     public String getName() {

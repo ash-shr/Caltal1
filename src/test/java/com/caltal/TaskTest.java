@@ -2,8 +2,10 @@ package com.caltal;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class TaskTest {
 
@@ -29,4 +31,19 @@ class TaskTest {
 
         assertTrue(task.isComplete());
     }
+
+    @Test
+    void returnsTrueWhenUserIsInsideGeofence() {
+        Task task = new Task("gym", 53.8100, -1.5600, 100);
+        boolean result = task.isWithinRange(53.8101, -1.5600);
+        assertTrue(result);
+    }
+
+    @Test
+    void returnsFalseWhenUserIsOutsideGeofence() {
+        Task task = new Task("gym", 53.8100, -1.5600, 100);
+        boolean result = task.isWithinRange(53.900, -1.5600);
+        assertFalse(result);
+    }
+
 }
