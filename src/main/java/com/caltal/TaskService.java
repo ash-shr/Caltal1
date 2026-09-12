@@ -4,25 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskService {
-    private final List<Task> tasks = new ArrayList<>();
 
-    public void addTask(Task task){
-        if (task == null){
-            throw new IllegalArgumentException("Task must not be null");
+    private final TaskRepository repository;
 
+    public TaskService(TaskRepository repository) {
+        if (repository == null) {
+            throw new IllegalArgumentException("Repository must not be null");
         }
-        tasks.add(task);
+        this.repository = repository;
     }
-    public List<Task> getAllTasks(){
-        return new ArrayList<>(tasks);
+
+    public void addTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task must not be null");
+        }
+        repository.save(task);
     }
-    public List<Task> findNearbyTasks(double userLatitude, double userLongitude){
+
+    public List<Task> getAllTasks() {
+        return repository.findAll();
+    }
+
+    public List<Task> findNearbyTasks(double userLatitude, double userLongitude) {
         List<Task> nearby = new ArrayList<>();
-        for (Task task: tasks){
-            if (!task.isComplete() && task.isWithinRange(userLatitude, userLongitude)){
+
+        for (Task task : repository.findAll()) {
+            if (!task.isComplete() && task.isWithinRange(userLatitude, userLongitude)) {
                 nearby.add(task);
             }
         }
+
         return nearby;
     }
 }

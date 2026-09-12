@@ -12,7 +12,7 @@ class TaskServiceTest {
 
     @Test
     void returnsOnlyTasksWithinRange() {
-        TaskService service = new TaskService();
+        TaskService service = new TaskService(new TaskRepository());
         service.addTask(new Task("buy milk", 53.7960, -1.5450, 200));
         service.addTask(new Task("gym", 53.8100, -1.5600, 100));
 
@@ -24,7 +24,7 @@ class TaskServiceTest {
 
     @Test
     void excludesCompletedTasksFromResults() {
-        TaskService service = new TaskService();
+        TaskService service = new TaskService(new TaskRepository());
 
         Task done = new Task("posted letter", 53.7960, -1.5450, 200);
         done.markComplete();
@@ -37,7 +37,7 @@ class TaskServiceTest {
 
     @Test
     void returnsEmptyListWhenNothingInRange() {
-        TaskService service = new TaskService();
+        TaskService service = new TaskService(new TaskRepository());
         service.addTask(new Task("get laundry", 53.7960, -1.5450, 200));
 
         List<Task> nearby = service.findNearbyTasks(51.5074, -0.1278);
@@ -47,14 +47,14 @@ class TaskServiceTest {
 
     @Test
     void rejectsNullTask() {
-        TaskService service = new TaskService();
+        TaskService service = new TaskService(new TaskRepository());
 
         assertThrows(IllegalArgumentException.class, () -> service.addTask(null));
     }
 
     @Test
     void returnedTaskListIsACopy() {
-        TaskService service = new TaskService();
+        TaskService service = new TaskService(new TaskRepository());
         service.addTask(new Task("buy milk", 53.7960, -1.5450, 200));
 
         service.getAllTasks().clear();
