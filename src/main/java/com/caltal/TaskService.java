@@ -1,8 +1,10 @@
 package com.caltal;
 
+import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;      
 
+@Service
 public class TaskService {
 
     private final TaskRepository repository;
