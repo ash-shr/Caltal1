@@ -5,7 +5,7 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-        TaskRepository repository = new TaskRepository();
+        TaskRepository repository = new InMemoryTaskRepository();
         TaskService service = new TaskService(repository);
 
         service.addTask(new Task("buy milk", 53.7960, -1.5450, 200));
