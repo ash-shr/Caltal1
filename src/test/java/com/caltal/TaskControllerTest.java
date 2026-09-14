@@ -1,0 +1,47 @@
+package com.caltal;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(TaskController.class)
+class TaskControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private TaskService service;
+
+    @Test
+    void returnsNearbyTasksAsJson() throws Exception {
+        Task task = new Task("buy milk", 53.7960, -1.5450, 200);
+        when(service.findNearbyTasks(anyDouble(), anyDouble())).thenReturn(List.of(task));
+
+        mockMvc.perform(get("/api/tasks/nearby?lat=53.7961&lon=-1.5451"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("buy milk"));
+    }
+    @Test 
+    void returnsAllTasksAsJson() throws Exception{
+        Task milk = new Task("buy milk", 53.7960, -1.5450, 200);
+        Task gym = new Task("gym", 53.8100, -1.5600, 100);
+        when(service.getAllTasks()).thenReturn(List.of(milk, gym));
+        mockMvc.perform(get("/api/tasks"))
+         .andExpect(status().isOk())
+         .andExpect(status().isOk())
+         .andExpect(jsonPath("$.length()").value(2));
+
+    
+    }
+}
