@@ -1,14 +1,27 @@
 package com.caltal;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+
+@Entity 
+
 public class Task {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    // private double userLatitude;
-    // private double userLongitude;
     private double latitude;
     private double longitude;
     private int radius;
     private boolean isComplete;
+    
+    protected Task(){
+
+    }
 
     public Task(String name, double latitude, double longitude, int radius) {
         setName(name);
@@ -17,6 +30,10 @@ public class Task {
         setRadius(radius);
         this.isComplete = false;
 
+    }
+
+    public Long getID(){
+        return id;
     }
 
     public boolean isWithinRange(double userLatitude, double userLongitude) {
@@ -64,6 +81,8 @@ public class Task {
     public boolean isComplete() {
         return isComplete;
     }
+
+    
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
