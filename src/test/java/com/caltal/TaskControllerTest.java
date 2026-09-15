@@ -6,11 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,16 +36,34 @@ class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("buy milk"));
     }
-    @Test 
-    void returnsAllTasksAsJson() throws Exception{
+
+    @Test
+    void returnsAllTasksAsJson() throws Exception {
         Task milk = new Task("buy milk", 53.7960, -1.5450, 200);
         Task gym = new Task("gym", 53.8100, -1.5600, 100);
         when(service.getAllTasks()).thenReturn(List.of(milk, gym));
-        mockMvc.perform(get("/api/tasks"))
-         .andExpect(status().isOk())
-         .andExpect(status().isOk())
-         .andExpect(jsonPath("$.length()").value(2));
 
-    
+        mockMvc.perform(get("/api/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void createsTaskFromPostRequest() throws Exception {
+        mockMvc.perform(post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"buy milk\",\"latitude\":53.796,\"longitude\":-1.545,\"radius\":200}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("buy milk"));
+
+        verify(service).addTask(any(Task.class));
+    }
+
+    @Test
+    void rejectsTaskWithInvalidLatitude() throws Exception {
+        mockMvc.perform(post("/api/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"impossible\",\"latitude\":9999,\"longitude\":0,\"radius\":200}"))
+                .andExpect(status().isBadRequest());
     }
 }
