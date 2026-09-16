@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: caltal
+      POSTGRES_USER: caltal
+      POSTGRES_PASSWORD: caltal
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U caltal"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/caltal
+      DB_USER: caltal
+      DB_PASSWORD: caltal
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
