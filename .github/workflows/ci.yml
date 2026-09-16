@@ -29,4 +29,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
+<<<<<<< HEAD
           path: target/surefire-reports/
+=======
+          path: target/surefire-reports/
+>>>>>>> c2db26d6d79a703b3d647c12ce73fa8aed7b1df9

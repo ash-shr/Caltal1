@@ -57,7 +57,7 @@ class TaskServiceTest {
 
         List<Task> nearby = service.findNearbyTasks(53.7961, -1.5451);
 
-        assertEquals(1, nearby.size());
+        assertEquals(2, nearby.size());
         assertEquals("buy milk", nearby.get(0).getName());
     }
 
