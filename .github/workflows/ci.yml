@@ -24,6 +24,16 @@ jobs:
       - name: Build and test
         run: mvn --batch-mode clean verify
 
+      - name: SonarCloud scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          mvn --batch-mode
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=ash-shr_Caltal1
+          -Dsonar.organization=ash-shr
+          -Dsonar.host.url=https://sonarcloud.io
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
