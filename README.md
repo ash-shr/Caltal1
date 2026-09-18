@@ -2,7 +2,9 @@
 
 A location-aware task service. Tasks are pinned to a place with a radius, and the API tells you which of your tasks you're currently near — so "buy milk" surfaces when you're by the shop rather than when you're at home.
 
-Built as a Spring Boot REST API with PostgreSQL, containerised, and deployed to AWS.
+**Live API:** https://caltal.fly.dev/api/tasks
+
+Built as a Spring Boot REST API with PostgreSQL, containerised, and deployed to Fly.io. Also deployed to AWS ECS Fargate with RDS as an exercise in cloud infrastructure.
 
 ## What it does
 
@@ -19,7 +21,7 @@ Distance is calculated with the Haversine formula — spherical rather than flat
 - **Maven**
 - **Docker** / Docker Compose
 - **GitHub Actions** CI, **SonarCloud** static analysis
-- Deployed to **AWS ECS Fargate** with **RDS PostgreSQL**
+- - Deployed on **Fly.io**; also deployed to **AWS ECS Fargate** with **RDS PostgreSQL**
 
 ## Architecture
 
@@ -113,9 +115,16 @@ The geofence logic was built test-first: the tests were written against `isWithi
 
 Every push and pull request runs the full build and test suite on a clean Ubuntu runner, followed by a SonarCloud scan for bugs, vulnerabilities and maintainability issues.
 
+## Deployment
+The live instance runs on Fly.io — the same Dockerfile used locally, with database credentials supplied as Fly secrets rather than baked into the image. The machine scales to zero when idle, so the first request after a period of inactivity takes a few seconds to wake.
+
+It was also deployed to AWS as a separate exercise: image in ECR, container on ECS Fargate, database on RDS, with security groups restricting database access to the task's security group and an IAM execution role for image pulls and log delivery.
+
+Both deployments read the same three environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`), so the identical image runs locally, on Fly and on AWS with no rebuild.
+
 ## Notes and known limitations
 
 - **Schema management** uses Hibernate's `ddl-auto=update`. Fine for development; a production deployment would want Flyway or Liquibase migrations.
-- **The database password** is passed as a plain environment variable. In the AWS deployment this should move to Secrets Manager.
+- - **Database credentials** are supplied as environment variables. On Fly these come from encrypted secrets; the AWS deployment passed them in the task definition, which should move to Secrets Manager.
 - **No authentication.** Every task is visible to every caller; there's no concept of a user yet.
 - **No client.** This is the backend only — there's no web or mobile frontend at present.
